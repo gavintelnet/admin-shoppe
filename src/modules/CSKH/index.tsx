@@ -1,9 +1,12 @@
 // import React, { useContext, useEffect, useState, useRef } from "react";
+// import { useDispatch } from "react-redux";
 // import { FiSearch } from "react-icons/fi";
 // import ChatList from "./components/ChatList";
 // import { ChatContext } from "../../context/ChatContext";
 // import ChatBox from "./components/ChatBox";
-// import { useFetchRecipientUser } from "../../hooks/useFetchRecipient";
+// import { useFetchRecipientUser } from "../../hooks/useFetchRecipient"; // Thay đổi path phù hợp với dự án của bạn
+// import { startLoading, stopLoading } from "../../redux/reducers/loadingReducer";
+
 // type Props = {};
 
 // const Cskh: React.FC<Props> = () => {
@@ -11,6 +14,7 @@
 //   const [sortedChats, setSortedChats] = useState<any[]>([]);
 //   const [searchTerm, setSearchTerm] = useState<string>(""); // State để lưu từ khóa tìm kiếm
 //   const prevUserChatsRef = useRef<any>([]);
+//   const dispatch = useDispatch();
 //   const {
 //     userChats,
 //     isUserChatsLoading,
@@ -49,11 +53,22 @@
 
 //   // Cập nhật `sortedChats` khi `userChats` hoặc `notifications` thay đổi
 //   useEffect(() => {
+//     let timeoutId: NodeJS.Timeout;
+
 //     if (prevUserChatsRef.current !== userChats) {
-//       setSortedChats(sortChats(userChats || []));
-//       prevUserChatsRef.current = userChats;
+//       dispatch(startLoading());
+//       timeoutId = setTimeout(() => {
+//         const sorted = sortChats(userChats || []);
+//         setSortedChats(sorted);
+//         prevUserChatsRef.current = userChats;
+//         dispatch(stopLoading());
+//       }, 2000); // Thời gian chờ 2 giây
 //     }
-//   }, [userChats, notifications]);
+
+//     return () => {
+//       clearTimeout(timeoutId); // Dọn dẹp timeout khi component unmount hoặc khi deps thay đổi
+//     };
+//   }, [userChats, notifications, dispatch]);
 
 //   // Lọc danh sách chats dựa trên từ khóa tìm kiếm
 //   useEffect(() => {
@@ -116,14 +131,14 @@
 // };
 
 // export default Cskh;
-
 import React, { useContext, useEffect, useState, useRef } from "react";
 import { useDispatch } from "react-redux";
+import { useLocation } from "react-router-dom";
 import { FiSearch } from "react-icons/fi";
 import ChatList from "./components/ChatList";
 import { ChatContext } from "../../context/ChatContext";
 import ChatBox from "./components/ChatBox";
-import { useFetchRecipientUser } from "../../hooks/useFetchRecipient"; // Thay đổi path phù hợp với dự án của bạn
+import { useFetchRecipientUser } from "../../hooks/useFetchRecipient";
 import { startLoading, stopLoading } from "../../redux/reducers/loadingReducer";
 
 type Props = {};
@@ -133,7 +148,9 @@ const Cskh: React.FC<Props> = () => {
   const [sortedChats, setSortedChats] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>(""); // State để lưu từ khóa tìm kiếm
   const prevUserChatsRef = useRef<any>([]);
+  const [hasTimeoutRun, setHasTimeoutRun] = useState<boolean>(false); // State để kiểm tra nếu timeout đã chạy
   const dispatch = useDispatch();
+  const location = useLocation();
   const {
     userChats,
     isUserChatsLoading,
@@ -175,20 +192,28 @@ const Cskh: React.FC<Props> = () => {
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
 
-    if (prevUserChatsRef.current !== userChats) {
+    if (location.pathname === "/cskh" && !hasTimeoutRun) {
       dispatch(startLoading());
       timeoutId = setTimeout(() => {
         const sorted = sortChats(userChats || []);
         setSortedChats(sorted);
         prevUserChatsRef.current = userChats;
         dispatch(stopLoading());
-      }, 5000); // Thời gian chờ 5 giây
+        setHasTimeoutRun(true); // Đánh dấu rằng timeout đã chạy
+      }, 3500); // Thời gian chờ 3.2 giây
     }
 
     return () => {
       clearTimeout(timeoutId); // Dọn dẹp timeout khi component unmount hoặc khi deps thay đổi
     };
-  }, [userChats, notifications, dispatch]);
+  }, [userChats, notifications, dispatch, location.pathname, hasTimeoutRun]);
+
+  // Đặt lại `hasTimeoutRun` khi rời khỏi trang `/cskh`
+  useEffect(() => {
+    if (location.pathname !== "/cskh") {
+      setHasTimeoutRun(false);
+    }
+  }, [location.pathname]);
 
   // Lọc danh sách chats dựa trên từ khóa tìm kiếm
   useEffect(() => {
