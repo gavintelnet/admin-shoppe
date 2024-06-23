@@ -105,6 +105,8 @@ export const endpoints = {
     findUserInChat: "chat/search",
     getMessageUserChat: "chat",
     createMessage: `chat/createMessage`,
+    readMessage: `chat/read`,
+    detailChat: `chat/detail`,
   },
   bank: {
     create: `admin/bank-account/create`,
