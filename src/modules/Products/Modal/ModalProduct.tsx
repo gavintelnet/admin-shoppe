@@ -77,26 +77,6 @@ const ModalProduct = (props: any) => {
     setPreviewOpen(true);
   };
 
-  //   const handleChange: UploadProps["onChange"] = async ({
-  //     fileList: newFileList,
-  //   }) => {
-  //     const base64Strings = await Promise.all(
-  //       newFileList.map(async (file) => {
-  //         if (file.originFileObj) {
-  //           return await getBase64(file.originFileObj as RcFile);
-  //         } else if (file.url) {
-  //           return await urlToBase64(file.url);
-  //         } else {
-  //           return "";
-  //         }
-  //       })
-  //     );
-
-  //     const validBase64Strings = base64Strings.filter((base64) => base64);
-  //     setBase64List(validBase64Strings);
-  //     setFileList(newFileList);
-  //   };
-
   const handleChange: UploadProps["onChange"] = async ({
     fileList: newFileList,
   }) => {
@@ -210,6 +190,7 @@ const ModalProduct = (props: any) => {
       });
     }
   }, [title, dataDetail, form]);
+
   return (
     <div>
       <Modal

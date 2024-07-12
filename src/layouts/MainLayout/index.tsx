@@ -9,6 +9,8 @@ import {
 import logoCMS from "../../assets/images/logocms.png";
 import { routes_url } from "../../routes/routes";
 import Notification from "../../modules/CSKH/components/Notification";
+import { useDispatch } from "react-redux";
+import { showNotification } from "../../redux/reducers/notificationReducer";
 
 const { Header, Sider, Content, Footer } = Layout;
 const { SubMenu } = Menu;
@@ -16,6 +18,9 @@ const { SubMenu } = Menu;
 const MainLayout = (props: any) => {
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
+  const userData = localStorage.getItem("userData");
+  const user: any = userData ? JSON.parse(userData) : null;
+  const dispatch = useDispatch();
   const toggle = () => {
     setCollapsed(!collapsed);
   };
@@ -36,7 +41,24 @@ const MainLayout = (props: any) => {
       </Menu.Item>
     </Menu>
   );
+  const handleCheckUser = (val: boolean) => {
+    if (user && user?.position === "Demo" && val) {
+      dispatch(
+        showNotification({
+          message: "Tài khoản không có quyền truy cập.",
+          type: "error",
+        })
+      );
+      return false;
+    }
+    return true;
+  };
 
+  const handleMenuClick = (path: any, checkDemo: any) => {
+    if (handleCheckUser(checkDemo)) {
+      navigate(path);
+    }
+  };
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Sider
@@ -58,7 +80,7 @@ const MainLayout = (props: any) => {
           {routes_url.map((group) =>
             group.children ? (
               <Menu.ItemGroup key={group.key} title={group.label}>
-                {group.children.map((item) => (
+                {group.children.map((item: any) => (
                   <Menu.Item
                     key={item.key}
                     icon={item.icon}
@@ -67,8 +89,10 @@ const MainLayout = (props: any) => {
                         ? "ant-menu-item-selected"
                         : ""
                     }
+                    onClick={() => handleMenuClick(item.path, item?.checkDemo)}
                   >
-                    <Link to={item.path}>{item.label}</Link>
+                    {/* <Link to={item.path}>{item.label}</Link> */}
+                    {item.label}
                   </Menu.Item>
                 ))}
               </Menu.ItemGroup>

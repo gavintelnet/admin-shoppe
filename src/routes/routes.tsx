@@ -50,6 +50,7 @@ export const routes_url = [
         element: <Users role={null} />,
         isPrivate: true,
         icon: <UserOutlined />,
+        checkDemo: true,
       },
       {
         key: "11",
@@ -58,6 +59,7 @@ export const routes_url = [
         element: <UserDashboard />,
         isPrivate: true,
         icon: <BsReverseLayoutTextSidebarReverse />,
+        checkDemo: true,
       },
       {
         key: "12",
@@ -66,6 +68,7 @@ export const routes_url = [
         element: <UserAgentcy />,
         isPrivate: true,
         icon: <RiMapPinUserLine />,
+        checkDemo: true,
       },
     ],
   },
@@ -118,6 +121,7 @@ export const routes_url = [
         element: <Orders />,
         isPrivate: true,
         icon: <AiOutlineRise />,
+        checkDemo: true,
       },
       {
         key: "13",
@@ -126,6 +130,7 @@ export const routes_url = [
         element: <Deposit />,
         isPrivate: true,
         icon: <AiOutlineDollar />,
+        checkDemo: true,
       },
       {
         key: "14",
@@ -142,6 +147,7 @@ export const routes_url = [
         element: <AdminChangeWallet />,
         isPrivate: true,
         icon: <AiOutlineDollar />,
+        checkDemo: true,
       },
     ],
   },
@@ -156,6 +162,7 @@ export const routes_url = [
         element: <Cskh />,
         isPrivate: true,
         icon: <PhoneOutlined />,
+        checkDemo: true,
       },
       {
         key: "5",
@@ -180,6 +187,7 @@ export const routes_url = [
         element: <CauHinhNganHang />,
         isPrivate: true,
         icon: <AiOutlineBank />,
+        checkDemo: true,
       },
       {
         key: "17",
@@ -188,6 +196,7 @@ export const routes_url = [
         element: <Settings />,
         isPrivate: true,
         icon: <IoSettingsOutline />,
+        checkDemo: true,
       },
     ],
   },
